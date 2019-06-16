@@ -97,6 +97,5 @@ func getAulaFromString(aulaString []string) (aula Aula, err error) {
 		disponivel: disponivel,
 		inscritos:  inscritos,
 	}
-
 	return
 }

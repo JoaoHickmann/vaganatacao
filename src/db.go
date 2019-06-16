@@ -28,10 +28,6 @@ func configurarDB(dataSourceName string) (err error) {
 		)
 	`
 	_, err = db.Exec(sqlCreate)
-	if err != nil {
-		return
-	}
-
 	return
 }
 
@@ -65,7 +61,6 @@ func obterDiferencasFromDB(aulas []Aula) (diferencas map[int]Aula, err error) {
 			diferencas[messageID] = aula
 		}
 	}
-
 	return
 }
 
@@ -77,6 +72,7 @@ func atualizarAulaOnDB(oldMessageID int, newMessageID int, aula Aula) (err error
 	if err != nil {
 		return
 	}
+
 	_, err = db.Exec(`
 		INSERT INTO aulas (messageID, dia, inicio, fim, total, disponivel, inscritos)
 		VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -85,8 +81,7 @@ func atualizarAulaOnDB(oldMessageID int, newMessageID int, aula Aula) (err error
 }
 
 func getAulasFromDB() (aulas []Aula, err error) {
-	var rows *sql.Rows
-	rows, err = db.Query(`
+	rows, err := db.Query(`
 		SELECT dia, inicio, fim, total, disponivel, inscritos
 		FROM aulas
 		ORDER BY dia, inicio
@@ -103,6 +98,5 @@ func getAulasFromDB() (aulas []Aula, err error) {
 		}
 		aulas = append(aulas, aula)
 	}
-
 	return
 }

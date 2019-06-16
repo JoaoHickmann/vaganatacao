@@ -1,19 +1,14 @@
 package main
 
 import (
-	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"strconv"
 )
 
 var bot *tgbotapi.BotAPI
 var channelID int64
 
-func configurarTelegram(token string, _channelID string) (updatesChannel tgbotapi.UpdatesChannel, err error) {
-	channelID, err = strconv.ParseInt(_channelID, 10, 64)
-	if err != nil {
-		return
-	}
+func configurarTelegram(token string, _channelID int64) (updatesChannel tgbotapi.UpdatesChannel, err error) {
+	channelID = _channelID
 
 	bot, err = tgbotapi.NewBotAPI(token)
 	if err != nil {
@@ -24,7 +19,6 @@ func configurarTelegram(token string, _channelID string) (updatesChannel tgbotap
 	u.Timeout = 60
 
 	updatesChannel, err = bot.GetUpdatesChan(u)
-
 	return
 }
 
@@ -36,22 +30,16 @@ func updateAulaOnChannel(oldMessageID int, aula Aula) (newMessageID int, err err
 		}
 	}
 
-	msg := fmt.Sprintf("Dia: %s\nInicio: %s\nFim: %s\nTotal: %d\nDisponivel: %d\nInscritos: %d\n\n",
-		aula.dia, aula.inicio.Format("15:04"), aula.fim.Format("15:04"), aula.total, aula.disponivel, aula.inscritos)
-
-	message, err := bot.Send(tgbotapi.NewMessage(channelID, msg))
+	message, err := bot.Send(tgbotapi.NewMessage(channelID, aula.toString()))
 	if err != nil {
 		return
 	}
 
 	newMessageID = message.MessageID
-
 	return
 }
 
 func sendAulaToUser(chatID int64, aula Aula) (err error) {
-	msg := fmt.Sprintf("Dia: %s\nInicio: %s\nFim: %s\nTotal: %d\nDisponivel: %d\nInscritos: %d\n\n",
-		aula.dia, aula.inicio.Format("15:04"), aula.fim.Format("15:04"), aula.total, aula.disponivel, aula.inscritos)
-	_, err = bot.Send(tgbotapi.NewMessage(chatID, msg))
+	_, err = bot.Send(tgbotapi.NewMessage(chatID, aula.toString()))
 	return
 }
