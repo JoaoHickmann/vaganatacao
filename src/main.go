@@ -42,7 +42,7 @@ func main() {
 	atualizaAulaChannel := make(chan []Aula)
 	go atualizaAulas(atualizaAulaChannel)
 
-	for true {
+	for {
 		select {
 		case telegramUpdate := <-telegramChannel:
 			switch telegramUpdate.Message.Text {
@@ -98,7 +98,7 @@ func enviaAulaFiltro(chatID int64, filtro func(aula Aula) bool) (err error) {
 }
 
 func atualizaAulas(atualizaAulasChannel chan<- []Aula) {
-	for true {
+	for {
 		aulas, err := getAulasFromWeb()
 		if err != nil {
 			log.Print(err)
