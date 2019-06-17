@@ -6,7 +6,7 @@ WORKDIR $GOPATH/src/github.com/JoaoHickmann/vaganatacao
 COPY src/* ./
 
 RUN go get -d -v
-RUN go build -o /go/bin/vaganatacao
+RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/vaganatacao
 
 FROM alpine
 
